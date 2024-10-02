@@ -63,7 +63,7 @@ export default function AssignmentEditor() {
                                 <option value="Online" selected>ONLINE</option>
                                 <option value="offline">OFFLINE</option>
                             </select><br/>
-                            <h6>Online Entry Options</h6>
+                            <h6><b>Online Entry Options</b></h6>
                             <div className="mb-3">
                                 <div className="form-check">
                                     <input type="checkbox" className="form-check-input" id="wd-text-entry" />
