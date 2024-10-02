@@ -97,20 +97,20 @@ export default function AssignmentEditor() {
                     <div className="col-md-7">
                         <div className="border border-gray p-3 rounded">
                             <div className="mb-3">
-                                <label htmlFor="wd-assign-to" className="form-label">Assign To</label>
+                                <label htmlFor="wd-assign-to" className="form-label"><b>Assign To</b></label>
                                 <input id="wd-assign-to" type="text" className="form-control" defaultValue="Everyone" />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="wd-due-date" className="form-label">Due Date</label>
+                                <label htmlFor="wd-due-date" className="form-label"><b>Due Date</b></label>
                                 <input id="wd-due-date" type="date" className="form-control" defaultValue="2024-05-13" />
                             </div>  
                             <div className="row mb-3">
                                 <div className="col-md-6">
-                                    <label htmlFor="wd-available-until" className="form-label">Available From</label>
+                                    <label htmlFor="wd-available-until" className="form-label"><b>Available From</b></label>
                                     <input id="wd-available-until" type="date" className="form-control" defaultValue="2024-05-13" />
                                 </div>
                                 <div className="col-md-6">
-                                    <label htmlFor="wd-available-until" className="form-label">Until</label>
+                                    <label htmlFor="wd-available-until" className="form-label"><b>Until</b></label>
                                     <input id="wd-available-until" type="date" className="form-control" defaultValue="2024-05-13" />
                                 </div>
                             </div>   
