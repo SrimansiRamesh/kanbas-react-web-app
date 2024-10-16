@@ -58,7 +58,7 @@ export default function Assignments() {
               <GiNotebook className="me-3 text-success" style={{fontSize:'2rem'}}/>
               <div className="flex-grow-1">
                 <Link
-                  to={`/courses/${cid}/Assignments/${assignment._id}`}
+                  to={`${assignment._id}`}
                   className="text-decoration-none text-dark"
                 >
                   <span className="fw-bold fs-5">{assignment.title}</span>
