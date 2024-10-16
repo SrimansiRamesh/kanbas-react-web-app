@@ -1,0 +1,12 @@
+.red h1#green { color : green }
+
+.padding {
+    border: 1px green solid;
+    padding-top: 10px blue solid;
+    padding-left: 20px red solid;
+    border-left: 30px;
+    border-top: 40px;
+    background-color: yellow;
+  }
+
+  h1.blue { background-color: blue }

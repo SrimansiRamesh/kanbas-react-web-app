@@ -1,19 +1,25 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import { Link } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
+import * as db from '../../Databases';
 export default function AssignmentEditor() {
+
+    const { cid, aid } = useParams();
+    const assignment = db.assignments.find(a => a.course === cid && a._id === aid);
+    if (!assignment) {
+        return <div>Assignment not found</div>;
+    }
     return (
             <div id="wd-css-styling-forms" className="container my-4">
                 {/* Assignment Name div*/}
                 <div className="mb-3">
                     <label htmlFor="wd-name" className="form-label ">Assignment Name</label>
-                    <input id="wd-name" className="form-control " defaultValue="A1" />
+                    <input id="wd-name" className="form-control " value={assignment.title} />
                 </div>
                 {/* Text area div */}
                 <div className="mb-3">
                     <textarea id="wd-description" className="form-control" rows={5}>
-                        The assignment is available online. Submit a link to the landing page of your web application running on Netlify. The landing page should include the following: Your full name and section, links to the labs assignment and Kanbas assignment, and links to all source code repositories. The Kanbas application should have a link to navigate back to the landing page.
+                    {assignment.description}    
                     </textarea>
                 </div>
                 {/* Points div */}
@@ -22,7 +28,7 @@ export default function AssignmentEditor() {
                         <label htmlFor="wd-points" className="form-label">Points</label>
                     </div>
                     <div className="col-md-7">
-                        <input id="wd-points" className="form-control" defaultValue={100} />
+                        <input id="wd-points" className="form-control" value={assignment.points} />
                     </div>
                 </div>
                 {/* Assignment Group div */}
@@ -102,16 +108,16 @@ export default function AssignmentEditor() {
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="wd-due-date" className="form-label"><b>Due Date</b></label>
-                                <input id="wd-due-date" type="date" className="form-control" defaultValue="2024-05-13" />
+                                <input id="wd-due-date" type="date" className="form-control" value={assignment.dueDate} />
                             </div>  
                             <div className="row mb-3">
                                 <div className="col-md-6">
                                     <label htmlFor="wd-available-until" className="form-label"><b>Available From</b></label>
-                                    <input id="wd-available-until" type="date" className="form-control" defaultValue="2024-05-13" />
+                                    <input id="wd-available-until" type="date" className="form-control" value={assignment.availableDate} />
                                 </div>
                                 <div className="col-md-6">
                                     <label htmlFor="wd-available-until" className="form-label"><b>Until</b></label>
-                                    <input id="wd-available-until" type="date" className="form-control" defaultValue="2024-05-13" />
+                                    <input id="wd-available-until" type="date" className="form-control" value={assignment.dueDate} />
                                 </div>
                             </div>   
                         </div>
@@ -120,11 +126,11 @@ export default function AssignmentEditor() {
                 <hr />
                 <div className="d-flex justify-content-end mb-3">
                 <Link id="wd-cancel-btn"
-                    to="/Kanbas/Courses/1234/Assignments"
+                    to={`/Kanbas/Courses/${cid}/Assignments`}
                     className="btn btn-secondary me-2">
                     Cancel </Link>
                 <Link id="wd-save-btn"
-                    to="/Kanbas/Courses/1234/Assignments"
+                    to={`/Kanbas/Courses/${cid}/Assignments`}
                     className="btn btn-danger me-2">
                     Save </Link>
                 </div>

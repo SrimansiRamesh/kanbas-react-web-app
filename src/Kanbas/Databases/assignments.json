@@ -1,0 +1,83 @@
+[
+    {
+        "_id": "A101",
+        "title": "Propulsion Assignment",
+        "course": "RS101",
+        "availableDate": "2024-10-01",
+        "dueDate": "2024-10-12",
+        "points": 150,
+        "description": "Analyze various propulsion systems used in aerospace engineering, including chemical, electrical, and hybrid propulsion. Discuss their applications, advantages, and limitations in different flight regimes. Provide detailed comparisons of thrust generation and fuel efficiency across the systems."
+    },
+    {
+        "_id": "A102",
+        "title": "Combustion Analysis",
+        "course": "RS101",
+        "availableDate": "2024-11-03",
+        "dueDate": "2024-11-14",
+        "points": 120,
+        "description": "Evaluate the combustion processes involved in propulsion systems. You are required to analyze combustion efficiency, fuel-air ratio, and the thermodynamic properties during combustion. Focus on the performance of both subsonic and supersonic combustion in different types of engines, such as jet engines and rocket motors."
+    },
+    {
+        "_id": "A103",
+        "title": "Nozzle Design Project",
+        "course": "RS101",
+        "availableDate": "2024-12-05",
+        "dueDate": "2024-12-18",
+        "points": 200,
+        "description": "Design an efficient nozzle for rocket propulsion that maximizes thrust while minimizing energy losses. Your project should include detailed calculations of nozzle geometries, pressure ratios, and the effects of varying atmospheric conditions. Use computational fluid dynamics (CFD) tools to simulate and optimize your design."
+    },
+    {
+        "_id": "A201",
+        "title": "Aerodynamics Quiz",
+        "course": "RS102",
+        "availableDate": "2025-01-28",
+        "dueDate": "2025-01-05",
+        "points": 80,
+        "description": "This quiz will test your fundamental understanding of aerodynamics, including airflow behavior around objects, the principles of lift and drag, and Bernoulli's equation. Be prepared to apply these principles to real-world scenarios, such as aircraft wing design and wind tunnel experiments."
+    },
+    {
+        "_id": "A202",
+        "title": "Flow Analysis",
+        "course": "RS102",
+        "availableDate": "2025-02-13",
+        "dueDate": "2025-02-20",
+        "points": 170,
+        "description": "Perform a detailed flow analysis for a given fluid, focusing on incompressible and compressible flows. Use advanced fluid dynamics concepts like the Navier-Stokes equations and boundary layer theory to evaluate the flow characteristics. Your analysis should cover laminar vs turbulent flow, pressure differentials, and velocity profiles."
+    },
+    {
+        "_id": "A203",
+        "title": "Heating Analysis",
+        "course": "RS102",
+        "availableDate": "2025-03-10",
+        "dueDate": "2025-03-22",
+        "points": 160,
+        "description": "Analyze thermal properties and heat transfer mechanisms in aerospace systems. This task includes evaluating conduction, convection, and radiation in high-temperature environments, such as engine components and re-entry vehicles. Use thermal modeling techniques to predict heat distribution and cooling requirements."
+    },
+    {
+        "_id": "A301",
+        "title": "Structural Design Task",
+        "course": "RS103",
+        "availableDate": "2025-04-04",
+        "dueDate": "2025-04-16",
+        "points": 190,
+        "description": "Design a structural component, such as a load-bearing wing spar or fuselage frame, based on given load constraints. You will need to apply concepts of material strength, stress analysis, and fatigue to ensure the component can withstand the specified forces. Provide detailed CAD models and structural simulations to support your design."
+    },
+    {
+        "_id": "A302",
+        "title": "Orbital Calculations",
+        "course": "RS103",
+        "availableDate": "2025-06-08",
+        "dueDate": "2025-06-24",
+        "points": 210,
+        "description": "Calculate the orbital parameters required for satellite motion. This includes determining the altitude, velocity, and eccentricity for different orbits (LEO, MEO, GEO). You are expected to consider factors like gravitational forces, orbital decay, and the effects of atmospheric drag. Present your calculations and results in a comprehensive report."
+    },
+    {
+        "_id": "A303",
+        "title": "Systems Engineering Exam",
+        "course": "RS103",
+        "availableDate": "2025-07-15",
+        "dueDate": "2025-07c-30",
+        "points": 180,
+        "description": "This final exam will cover systems engineering concepts such as requirements analysis, system integration, and project management within aerospace systems. You will be asked to solve problems related to complex system design, testing, and validation. Prepare to apply theoretical knowledge to practical aerospace scenarios."
+    }
+]
