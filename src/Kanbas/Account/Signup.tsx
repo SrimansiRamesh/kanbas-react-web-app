@@ -15,8 +15,9 @@ export default function Signup() {
              className="form-control mb-3"/>
       <Link id="wd-signin-btn"
             to="/Kanbas/Account/Profile"
-            className="btn btn-primary w-100 mb-3">
+            className="btn btn-primary w-100 mb-2">
             Sign up </Link>
-      <Link to="/Kanbas/Account/Signin" >Sign in</Link>
+      <Link to="/Kanbas/Account/Signin" 
+      className="btn btn-primary w-100 mb-3">Sign in</Link>
     </div>
 );}

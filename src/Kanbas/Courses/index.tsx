@@ -8,8 +8,8 @@ import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import { courses } from "../Databases";
 
-export default function Courses() {
-    const { cid } = useParams();
+export default function Courses({ courses }: { courses: any[]; }) {
+    const { cid,aid } = useParams();
     const course = courses.find((course) => course._id === cid);
     const { pathname } = useLocation();
     return (
@@ -28,7 +28,8 @@ export default function Courses() {
                     <Route path="Home" element={<Home/>} />
                     <Route path="Modules" element={<Modules/>} />
                     <Route path="Assignments" element={<Assignments />} />
-                    <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+                    <Route path="Assignments/new" element={<AssignmentEditor />} />
+                    <Route path="Assignments/:aid?" element={<AssignmentEditor />} />
                     <Route path="People" element={<PeopleTable/>} />
                 </Routes>
             </div></div>

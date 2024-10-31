@@ -231,6 +231,6 @@ export default function Lab1(){
                     to go to the github repo<br/>
                 </form>
             </div>
-        </div>
+        </div> 
     )
 }
