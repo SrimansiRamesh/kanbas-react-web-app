@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { createSlice } from '@reduxjs/toolkit';
+import { enrollments } from '../Databases';
 const initialState = {
-    enrollments: [] as { user: string; course: string }[], // Type inference for the enrollments array
+    enrollments: [] as { user: string; course: string }[], 
 };
 
 const enrollmentSlice = createSlice({

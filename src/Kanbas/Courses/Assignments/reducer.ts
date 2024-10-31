@@ -9,19 +9,6 @@ const assignmentsSlice = createSlice({
   initialState,
   reducers: {
     addAssignment: (state, action) => {
-      // const newAssignment: any = {
-      //     _id: assignment._id, // Use the _id passed from the formData
-      //     title: assignment.title,
-      //     description: assignment.description, // Make sure to include this field
-      //     course: assignment.course,
-      //     availableDate: assignment.availableDate,
-      //     dueDate: assignment.dueDate,
-      //     points: assignment.points,
-      //     assignmentGroup: assignment.assignmentGroup, // Add any other necessary fields
-      //     displayGradeAs: assignment.displayGradeAs,
-      //     submissionType: assignment.submissionType,
-      //     onlineEntryOptions: assignment.onlineEntryOptions,
-      // };
       state.assignments.push(action.payload); 
     },
     deleteAssignment: (state, action) => {
