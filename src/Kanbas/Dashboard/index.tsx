@@ -37,7 +37,7 @@ export default function Dashboard({
   };
 
   const displayedCourses = showAllCourses ? courses : courses.filter(course =>
-    enrollments.some((enrollment: any) => enrollment.course === course._id)
+    enrollments.some((enrollment: any) => enrollment.course === course._id && enrollment.user === currentUser._id)
   );
 
   const filteredCourses = courses.filter(course => enrollments);
@@ -70,19 +70,18 @@ export default function Dashboard({
           <hr />
         </>
       )}
-      {isStudent && (
+      {(
         <button className="btn btn-info float-end" onClick={toggleCourses}>
           {showAllCourses ? "Show Enrolled Courses" : "Show All Courses"}
         </button>
       )}
 
-      <h2 id="wd-dashboard-published">
-        Courses ({isFaculty ? filteredCourses.length : displayedCourses.length})
-      </h2>
+      <h2 id="wd-dashboard-published">Courses { `(${filteredCourses.length})`}</h2>
+
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {(isFaculty ? filteredCourses : displayedCourses).map((course) => (
+        {(displayedCourses).map((course) => (
             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden h-100">
                 <Link
@@ -114,14 +113,14 @@ export default function Dashboard({
                         </button>
                       </>
                     )}
-                    {isStudent && (
-                      enrollments.some((enrollment: any) => enrollment.course === course._id) ? (
-                        <button
+                    { (
+            enrollments.some((enrollment: any) => enrollment.course === course._id && enrollment.user === currentUser._id) ? (
+              <button
                           onClick={(event) => {
                             event.preventDefault();
                             handleUnenroll(course._id);
                           }}
-                          className="btn btn-danger float-end"
+                          className="btn btn-danger my-2 float-end"
                         >
                           Unenroll
                         </button>
@@ -131,7 +130,7 @@ export default function Dashboard({
                             event.preventDefault();
                             handleEnroll(course._id);
                           }}
-                          className="btn btn-success float-end"
+                          className="btn btn-success my-2 float-end"
                         >
                           Enroll
                         </button>

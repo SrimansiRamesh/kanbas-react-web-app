@@ -21,6 +21,7 @@ export default function Labs(){
                     <Route path="Lab3/*" element={<Lab3 />} />
                     <Route path="Lab4/*" element={<Lab4 />} />
                 </Routes>
+                
             </div>
         </Provider>
 
