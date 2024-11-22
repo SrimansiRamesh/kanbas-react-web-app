@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { enrollCourse, unenrollCourse } from "./EnrollmentsSlice"; 
+import { enrollUser, unenrollUser } from "../Account/client";
+
 import { useState } from "react";
 
 export default function Dashboard({
@@ -36,18 +38,7 @@ export default function Dashboard({
     dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
   };
 
-
-  // const filteredCourses = courses.filter((course) =>
-  //   enrollments.some(
-  //     (enrollment: any) =>
-  //       enrollment.course === course._id && enrollment.user === currentUser._id
-  //   )
-  // );
-  // console.log(courses);
   const displayedCourses = showAllCourses ? allCourses : courses;
-  
-
-  // console.log(displayedCourses);
 
   
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import * as db from '../../Databases';
 import AssignmentControls from './AssignmentControls';
@@ -7,38 +7,47 @@ import LessonControlButtons from '../Modules/LessonControlButtons';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { BsGripVertical } from 'react-icons/bs';
 import { GiNotebook } from "react-icons/gi";
-import { addAssignment,editAssignment,deleteAssignment,updateAssignment } from './reducer';
+import { addAssignment,editAssignment,deleteAssignmentAction,updateAssignmentAction, Assignment, setAssignments } from './reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteModule } from '../Modules/reducer';
+import { createAssignment, deleteAssignment, findAssignmentsForCourse } from './client';
 export default function Assignments() {
   const { cid } = useParams(); 
+  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
-  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-  const courseAssignments = assignments.filter(
-     (assignment:any) => assignment.course === cid
-  );
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      if (!cid) return;
+      try {
+        const data = await findAssignmentsForCourse(cid); // Fetch by courseId
+        dispatch(setAssignments(data));
+      } catch (error) {
+        console.error(`Error fetching assignments for course ${cid}:`, error);
+      }
+    };
+
+    fetchAssignments();
+  }, [cid, dispatch]);
+
+  
+  const handleDelete = async (assignmentId: string) => {
+    if (window.confirm("Are you sure you want to delete this assignment?")) {
+      try {
+        await deleteAssignment(assignmentId);
+        dispatch(deleteAssignmentAction(assignmentId));
+      } catch (error) {
+        console.error("Error deleting assignment:", error);
+      }
+    }
+    
+  };
+
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
 
-  const handleDeleteClick = (assignmentId: string) => {
-    setAssignmentToDelete(assignmentId);
-    setShowDeleteDialog(true);
-  };
 
-  const confirmDelete = () => {
-    if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete)); // Call the delete action
-    }
-    setShowDeleteDialog(false);
-    setAssignmentToDelete(null);
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteDialog(false);
-    setAssignmentToDelete(null);
-  };
-
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser?.role === "FACULTY";
   return (
     <div className="w-100 p-5">
@@ -60,8 +69,8 @@ export default function Assignments() {
             </div>
           </div>
         </li>
-        {courseAssignments.length > 0 ? (
-          courseAssignments.map((assignment:any) => (
+        {assignments.length > 0 ? (
+          assignments.map((assignment:any) => (
             <li
               key={assignment._id}
               className="list-group-item p-3 d-flex align-items-center"
@@ -85,7 +94,7 @@ export default function Assignments() {
               {isFaculty&&(
               <FaTrash 
                 className="text-danger me-2 mb-1" 
-                onClick={() => handleDeleteClick(assignment._id)} 
+                onClick={() =>  handleDelete(assignment._id)} 
                 style={{ cursor: 'pointer' }} 
               />)}
               <LessonControlButtons />
@@ -95,7 +104,7 @@ export default function Assignments() {
           <p>No assignments available for this course.</p>
         )}
       </ul>
-      {showDeleteDialog && (
+      {/* {showDeleteDialog && (
         <div className="modal show" style={{ display: 'block' }}>
           <div className="modal-dialog">
             <div className="modal-content">
@@ -113,7 +122,7 @@ export default function Assignments() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

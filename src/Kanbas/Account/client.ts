@@ -37,7 +37,7 @@ export const signout = async () => {
 };
 
 export const findMyCourses = async (user:any) => {
-  const { data } = await axiosWithCredentials.get(`${USERS_API}/${user._id}/courses`);
+  const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
   return data;
 };
 
@@ -49,6 +49,17 @@ export const findAllCourses=async()=>{
 export const createCourse = async (course: any) => {
   const { data } = await axiosWithCredentials.post(`${USERS_API}/current/courses`, course);
   return data;
+};
+
+export const enrollUser = async (data: { courseId: string; userId: string }) => {
+  console.log("Payload sent to enrollUser:", data); // Debugging
+  const response = await axios.post(`${ENROLLMENTS_API}`, data);
+  return response.data;
+};
+
+export const unenrollUser = async (unenrollment: { userId: string; courseId: string }) => {
+  const response = await axios.delete(ENROLLMENTS_API, { data: unenrollment });
+  return response.data;
 };
 
 
