@@ -11,5 +11,8 @@ const accountSlice = createSlice({
     },
   },
 });
+console.log("reducer");
+console.log(accountSlice.actions);
+
 export const { setCurrentUser } = accountSlice.actions;
 export default accountSlice.reducer;

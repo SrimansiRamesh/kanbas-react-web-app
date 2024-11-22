@@ -12,7 +12,7 @@ const store = configureStore({
   },
 });
 // store.subscribe(() => {
-//   localStorage.setItem("enrollments", JSON.stringify(store.getState().EnrollmentsReducer.enrolledCourses));
+//   localStorage.setItem("enrollments", JSON.stringify(store.getState().EnrollmentsReducer.enrollments));
 // });
 export default store;
 

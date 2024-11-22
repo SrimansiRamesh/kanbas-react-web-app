@@ -6,6 +6,7 @@ import { useState } from "react";
 export default function Dashboard({
   courses,
   course,
+  allCourses,
   setCourse,
   addNewCourse,
   deleteCourse,
@@ -13,6 +14,7 @@ export default function Dashboard({
 }: {
   courses: any[];
   course: any;
+  allCourses:any[];
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
@@ -21,9 +23,7 @@ export default function Dashboard({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.EnrollmentsReducer); 
   const dispatch = useDispatch();
-
   const isFaculty = currentUser?.role === "FACULTY";
-  const isStudent = currentUser?.role === "STUDENT"; 
   const [showAllCourses, setShowAllCourses] = useState(false); 
 
   const toggleCourses = () => setShowAllCourses(!showAllCourses); 
@@ -36,11 +36,20 @@ export default function Dashboard({
     dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
   };
 
-  const displayedCourses = showAllCourses ? courses : courses.filter(course =>
-    enrollments.some((enrollment: any) => enrollment.course === course._id && enrollment.user === currentUser._id)
-  );
 
-  const filteredCourses = courses.filter(course => enrollments);
+  // const filteredCourses = courses.filter((course) =>
+  //   enrollments.some(
+  //     (enrollment: any) =>
+  //       enrollment.course === course._id && enrollment.user === currentUser._id
+  //   )
+  // );
+  // console.log(courses);
+  const displayedCourses = showAllCourses ? allCourses : courses;
+  
+
+  // console.log(displayedCourses);
+
+  
 
   return (
     <div id="wd-dashboard">
@@ -74,9 +83,9 @@ export default function Dashboard({
         <button className="btn btn-info float-end" onClick={toggleCourses}>
           {showAllCourses ? "Show Enrolled Courses" : "Show All Courses"}
         </button>
+      
       )}
-
-      <h2 id="wd-dashboard-published">Courses { `(${filteredCourses.length})`}</h2>
+      <h2 id="wd-dashboard-published">Courses { `(${displayedCourses.length})`}</h2>
 
       <hr />
       <div id="wd-dashboard-courses" className="row">
@@ -113,9 +122,9 @@ export default function Dashboard({
                         </button>
                       </>
                     )}
-                    { (
-            enrollments.some((enrollment: any) => enrollment.course === course._id && enrollment.user === currentUser._id) ? (
-              <button
+                    { 
+                      enrollments.some((enrollment: any) => enrollment.course === course._id && enrollment.user === currentUser._id) ? (
+                      <button
                           onClick={(event) => {
                             event.preventDefault();
                             handleUnenroll(course._id);
@@ -134,8 +143,7 @@ export default function Dashboard({
                         >
                           Enroll
                         </button>
-                      )
-                    )}
+                      )}
                   </div>
                 </Link>
               </div>
@@ -146,3 +154,4 @@ export default function Dashboard({
     </div>
   );
 }
+
