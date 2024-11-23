@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 export default function Account() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   return (
+    //
     <div id="wd-account-screen">
       <table>
         <tr>
