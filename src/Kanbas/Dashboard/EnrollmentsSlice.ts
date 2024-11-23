@@ -12,8 +12,9 @@ const enrollmentSlice = createSlice({
             state.enrollments.push(action.payload);
         },
         unenrollCourse(state, action) {
+            const { user, course } = action.payload;
             state.enrollments = state.enrollments.filter(
-                (e:any) => !(e.user === action.payload.user && e.course === action.payload.course)
+                (e) => e.user !== user || e.course !== course
             );
         },
     },

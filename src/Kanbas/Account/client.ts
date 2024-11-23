@@ -1,7 +1,7 @@
 import axios from "axios";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 export const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
-export const USERS_API = `${REMOTE_SERVER}/api/users`;  // Corrected string interpolation
+export const USERS_API = `${REMOTE_SERVER}/api/users`;  
 export const ENROLLMENTS_API = `${REMOTE_SERVER}/api/enrollments`;
 
 export const signin = async (credentials: any) => {
@@ -37,7 +37,7 @@ export const signout = async () => {
 };
 
 export const findMyCourses = async (user:any) => {
-  const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
+  const { data } = await axiosWithCredentials.get(`${USERS_API}/${user._id}/courses`);
   return data;
 };
 

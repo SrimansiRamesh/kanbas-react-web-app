@@ -30,8 +30,7 @@ export default function Kanbas() {
   useEffect(() => {
     fetchCourses();
   }, [currentUser]);
-
-  
+ 
   const [course, setCourse] = useState<any>({
     _id: "1234", name: "New Course", number: "New Number",
     startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
@@ -50,10 +49,11 @@ export default function Kanbas() {
   },[]);
 
   const addNewCourse = async() => {
-    const newCourse = await userClient.createCourse(course);
+    const { _id, ...courseData } = course;
+    const newCourse = await userClient.createCourse(courseData);
     setCourses([...courses, newCourse]);
-    console.log("newCourse",newCourse);
   };
+
   const deleteCourse = async(courseId: any) => {
     const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
