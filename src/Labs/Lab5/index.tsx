@@ -6,9 +6,9 @@ import WorkingWithArrays from "./WorkingWithArrays";
 import WorkingWithArraysAsynchronously from "./WorkingWithArraysAsync";
 import WorkingWithObjects from "./WorkingWithObjects";
 import WorkingWithObjectsAsynchronously from "./WorkingWithObjectsAsync";
-const REMOTE_SERVER = process.env.REMOTE_SERVER;
+const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 export default function Lab5() {
-  
+
     return (
       <div id="wd-lab5">
         <h2>Lab 5</h2>
