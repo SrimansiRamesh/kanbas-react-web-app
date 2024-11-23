@@ -39,7 +39,6 @@ export default function Dashboard({
   };
 
   const displayedCourses = showAllCourses ? allCourses : courses;
-  console.log(courses);
   
 
   return (
