@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 export default function ModulesControls({ moduleName, setModuleName, addModule }:
   { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  console.log(currentUser);
   const isFaculty = currentUser?.role === "FACULTY";
   return (
     

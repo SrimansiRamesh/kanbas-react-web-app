@@ -19,7 +19,6 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  console.log(currentUser);
   const isFaculty = currentUser?.role === "FACULTY";
   const dispatch = useDispatch();
   const fetchModules = async () => {

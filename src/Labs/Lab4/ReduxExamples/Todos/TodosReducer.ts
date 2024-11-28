@@ -24,10 +24,11 @@ const todosSlice = createSlice({
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
     updateTodo: (state, action) => {
-      state.todos = state.todos.map((item) =>
+      const newTodos = state.todos.map((item) =>
         item.id === action.payload.id ? action.payload : item
       );
-      state.todo = { title: "" }; // Clear the input after updating
+      state.todos = newTodos;
+      state.todo = { title: "" };
     },
     setTodo: (state, action) => {
       state.todo = action.payload;

@@ -10,7 +10,6 @@ export default function ModuleControlButtons({ moduleId, deleteModule,editModule
   moduleId: string; deleteModule: (moduleId: string) => void;
   editModule: (moduleId: string) => void } ) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  console.log(currentUser);
   const isFaculty = currentUser?.role === "FACULTY";
   return (
     <div className="float-end">

@@ -7,9 +7,14 @@ export const fetchAllCourses = async () => {
 };
 
 export const deleteCourse = async (id: string) => {
-  const { data } = await axios.delete(`${COURSES_API}/${id}`);
-  console.log(data);
-  return data;
+  try {
+    const { data } = await axios.delete(`${COURSES_API}/${id}`);
+    console.log("API Response:", data); // Debug API response
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error deleting course:", error);
+    return { success: false, message: "Error" };
+  }
 };
 
 export const updateCourse = async (course: any) => {

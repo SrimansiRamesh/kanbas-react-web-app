@@ -39,7 +39,7 @@ export default function Dashboard({
   };
 
   const displayedCourses = showAllCourses ? allCourses : courses;
-  
+
 
   return (
     <div id="wd-dashboard">
@@ -69,14 +69,14 @@ export default function Dashboard({
           <hr />
         </>
       )}
-      {(
+     {(
         <button className="btn btn-info float-end" onClick={toggleCourses}>
           {showAllCourses ? "Show Enrolled Courses" : "Show All Courses"}
         </button>
       
       )}
+    
       <h2 id="wd-dashboard-published">Courses { `(${displayedCourses.length})`}</h2>
-
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">

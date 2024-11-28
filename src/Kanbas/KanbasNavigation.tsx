@@ -6,11 +6,11 @@ import { Link, useLocation } from "react-router-dom";
 export default function KanbasNavigation() {
   const { pathname } = useLocation();
   const links = [
-    { label: "Dashboard", path: "/Kanbas/Dashboard", icon: AiOutlineDashboard },
-    { label: "Courses",   path: "/Kanbas/Dashboard", icon: LiaBookSolid },
-    { label: "Calendar",  path: "/Kanbas/Calendar",  icon: IoCalendarOutline },
-    { label: "Inbox",     path: "/Kanbas/Inbox",     icon: FaInbox },
-    { label: "Labs",      path: "/Labs",             icon: LiaCogSolid },
+    { label: "Dashboard", id:"1",path: "/Kanbas/Dashboard", icon: AiOutlineDashboard },
+    { label: "Courses",  id:"2", path: "/Kanbas/Dashboard", icon: LiaBookSolid },
+    { label: "Calendar", id:"3", path: "/Kanbas/Calendar",  icon: IoCalendarOutline },
+    { label: "Inbox",   id:"4",  path: "/Kanbas/Inbox",     icon: FaInbox },
+    { label: "Labs",   id:"5",   path: "/Labs",             icon: LiaCogSolid },
   ];
   return (
     <div id="wd-kanbas-navigation" style={{width: 120}}
@@ -25,7 +25,7 @@ export default function KanbasNavigation() {
         Account
       </Link>
       {links.map((link) => (
-        <Link key={link.path} to={link.path} className={`list-group-item bg-black text-center border-0
+        <Link key={link.id} to={link.path} className={`list-group-item bg-black text-center border-0
               ${pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"}`}>
           {link.icon({ className: "fs-1 text-danger"})}
           <br />
