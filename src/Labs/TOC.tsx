@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 export default function TOC() {
   const { pathname } = useLocation();
-  /*Test comment */
+  /*Test comment -2*/
   return (
     <ul className="nav nav-pills">
       <li className="nav-item">
@@ -56,7 +56,7 @@ export default function TOC() {
         </a>
       </li>
       <li className="nav-item">
-        <a id="wd-k" href="https://kanbas-node-server-app-6-mxh1.onrender.com/" className="nav-link">
+        <a id="wd-k" href="https://kanbas-node-server-app-7-q75f.onrender.com/" className="nav-link">
           Server Link
         </a>
       </li>
