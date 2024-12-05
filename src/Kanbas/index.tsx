@@ -10,17 +10,22 @@ import Session from "./Account/Session";
 import * as userClient from "./Account/client";
 import { useSelector } from "react-redux";
 import * as courseClient from "./Courses/client";
+import { enrollIntoCourse, enrollUser, unenrollFromCourse, unenrollUser } from "../Kanbas/Account/client";
 
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
   const [allCourses, setAllCourses] = useState<any[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [enrolling, setEnrolling] = useState<boolean>(false);
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const fetchEnrolledCourses = async () => {
+  const findCoursesForUser = async () => {
     try {
-      const courses = await userClient.findMyCourses(currentUser);
+      const courses = await userClient.findCoursesForUser(currentUser._id);
+      console.log(courses);
       setEnrolledCourses(courses);
+      //setCourses(courses);
     } catch (error) {
       console.error("Error fetching enrolled courses:", error);
     }
@@ -32,12 +37,13 @@ export default function Kanbas() {
   useEffect(() => {
     if (currentUser) {
       fetchAllCourses();
-      fetchEnrolledCourses();
+      findCoursesForUser();
     } else {
-      setAllCourses([]); // Clear all courses if no user is logged in
-      setEnrolledCourses([]); // Clear enrolled courses
+      setAllCourses([]); 
+      setEnrolledCourses([]); 
     }
-  }, [currentUser]);
+ 
+  }, [currentUser,enrolling]);
 
 
  
@@ -49,46 +55,76 @@ export default function Kanbas() {
 
   const fetchAllCourses=async()=>{
     try{
-      const allCourses=await userClient.findAllCourses();
+      const allCourses=await courseClient.fetchAllCourses();
       setAllCourses(allCourses);
     }catch(error){
       console.log(error);
     }
   };
   useEffect(()=>{
-    fetchAllCourses();
+    fetchCourses();
   },[]);
 
+  const fetchCourses = async () => {
+    try {
+      const allCourses = await courseClient.fetchAllCourses();
+      const enrolledCourses = await userClient.findCoursesForUser(
+        currentUser._id
+      );
+      const courses = allCourses.map((course: any) => {
+        if (enrolledCourses.find((c: any) => c._id === course._id)) {
+          return { ...course, enrolled: true };
+        } else {
+          return course;
+        }
+      });
+      setCourses(allCourses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser && currentUser._id) {
+      fetchCourses();
+     
+    }
+  }, [currentUser]);
+ 
   const addNewCourse = async() => {
     const { _id, ...courseData } = course;
     console.log(courseData)
-    const newCourse = await userClient.createCourse(courseData);
+    const newCourse = await courseClient.createCourse(course);
     setAllCourses([...allCourses, newCourse]);
-    await fetchEnrolledCourses();
+    await findCoursesForUser();
   };
 
   const deleteCourse = async (courseId: string) => {
-    try {
-      const status = await courseClient.deleteCourse(courseId);
+    const status = await courseClient.deleteCourse(courseId);
+    setAllCourses(allCourses.filter((course) => course._id !== courseId));
+    await unenrollFromCourse(  currentUser._id ,courseId);
+      setEnrolledCourses(enrolledCourses.filter((c:any) => c._id !== courseId));
+    // try {
+    //   const status = await courseClient.deleteCourse(courseId);
   
-      if (status.success) {
-        setAllCourses((prevCourses) => {
-          const updatedCourses = prevCourses.filter((course) => course._id !== courseId);
-          console.log(updatedCourses)
-          return updatedCourses;
-        });
-        setCourses((prevCourses) => {
-          const updatedEnrolledCourses = prevCourses.filter((course) => course._id !== courseId);
-          console.log(updatedEnrolledCourses)
-          return updatedEnrolledCourses;
-        });
-        setEnrolledCourses((prevEnrolled) => prevEnrolled.filter((c) => c._id !== courseId));
-      } else {
-        console.error("Failed to delete course:", status.message);
-      }
-    } catch (error) {
-      console.error("Error deleting course:", error);
-    }
+    //   if (status.success) {
+    //     setAllCourses((prevCourses) => {
+    //       const updatedCourses = prevCourses.filter((course) => course._id !== courseId);
+    //       console.log(updatedCourses)
+    //       return updatedCourses;
+    //     });
+    //     setCourses((prevCourses) => {
+    //       const updatedEnrolledCourses = prevCourses.filter((course) => course._id !== courseId);
+    //       console.log(updatedEnrolledCourses)
+    //       return updatedEnrolledCourses;
+    //     });
+    //     setEnrolledCourses((prevEnrolled) => prevEnrolled.filter((c) => c._id !== courseId));
+    //   } else {
+    //     console.error("Failed to delete course:", status.message);
+    //   }
+    // } catch (error) {
+    //   console.error("Error deleting course:", error);
+    // }
   };
 
   const updateCourse = async () => {
@@ -111,7 +147,7 @@ export default function Kanbas() {
         }
       })
     );
-    const updatedEnrolledCourses = await userClient.findMyCourses(currentUser);
+    const updatedEnrolledCourses = await userClient.findCoursesForUser(currentUser._id);
       setEnrolledCourses(updatedEnrolledCourses);
   };
   

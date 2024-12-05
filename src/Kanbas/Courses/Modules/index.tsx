@@ -29,6 +29,7 @@ export default function Modules() {
     if (!cid) return;
     const newModule = { name: moduleName, course: cid };
     const module = await coursesClient.createModuleForCourse(cid, newModule);
+    console.log("module id created:",module._id);
     dispatch(addModule(module));
   };
   const removeModule = async (moduleId: string) => {
@@ -36,6 +37,7 @@ export default function Modules() {
     dispatch(deleteModule(moduleId));
   };
   const saveModule = async (module: any) => {
+    console.log('module saved:',module._id);
     await modulesClient.updateModule(module);
     dispatch(updateModule(module));
   };

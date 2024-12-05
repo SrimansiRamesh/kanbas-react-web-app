@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { enrollUser, unenrollUser } from "../Account/client";
-import { enrollCourse, unenrollCourse } from "./EnrollmentsSlice";
+import { enrollIntoCourse,findCoursesForUser,unenrollFromCourse } from "../Account/client";
 
 import { useState } from "react";
 
@@ -25,17 +24,11 @@ export default function Dashboard({
   setEnrolledCourses: (courses: any[]) => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.EnrollmentsReducer); 
-  const dispatch = useDispatch();
   const isFaculty = currentUser?.role === "FACULTY";
   const [showAllCourses, setShowAllCourses] = useState(false); 
 
   const toggleCourses = () => setShowAllCourses(!showAllCourses); 
 
-  
-  // const handleUnenroll = (courseId: string) => {
-    //   dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
-    // };
     
     const isEnrolled = (courseId: string): boolean =>
       enrolledCourses.some((course:any) => course._id === courseId);
@@ -43,8 +36,7 @@ export default function Dashboard({
     
     const handleEnroll = async (courseId: string) => {
       try {
-        await enrollUser({ courseId, userId: currentUser._id });
-        dispatch(enrollCourse({ user: currentUser._id, course: courseId }));
+        await enrollIntoCourse( currentUser._id,courseId );
         setEnrolledCourses([...enrolledCourses, allCourses.find((c) => c._id === courseId)]);
       } catch (error) {
         console.error("Error enrolling:", error);
@@ -53,16 +45,14 @@ export default function Dashboard({
 
     const handleUnenroll = async (courseId: string) => {
       try {
-        await unenrollUser({ courseId, userId: currentUser._id });
-        dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
+        await unenrollFromCourse(  currentUser._id ,courseId);
         setEnrolledCourses(enrolledCourses.filter((c:any) => c._id !== courseId));
       } catch (error) {
         console.error("Error unenrolling:", error);
       }
     };
 
-    const displayedCourses = showAllCourses ? allCourses : enrolledCourses;
-
+  const displayedCourses = showAllCourses ? allCourses : enrolledCourses;
 
   return (
     <div id="wd-dashboard">
