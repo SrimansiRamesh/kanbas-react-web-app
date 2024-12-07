@@ -15,12 +15,6 @@ export default function AssignmentEditor() {
     const { cid, aid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [assignmentName, setAssignmentName] = useState("");
-    const [points, setPoints] = useState(100);
-    const [dueDate, setDueDate] = useState("2024-12-31");
-    const [availableFrom, setAvailableFrom] = useState("2024-11-01");
-    const [availableUntil, setAvailableUntil] = useState("2024-12-31");
-    const [editedAssignment, setEditedAssignment] = useState<Assignment | null>(null);
     const {assignments}  = useSelector((state:any) => state.assignmentsReducer);
     
       const existingAssignment = assignments.find((a: any) => a._id === aid);

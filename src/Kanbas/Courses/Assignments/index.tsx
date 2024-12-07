@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import * as db from '../../Databases';
 import AssignmentControls from './AssignmentControls';
-import { FaSearch, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import LessonControlButtons from '../Modules/LessonControlButtons';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { BsGripVertical } from 'react-icons/bs';
 import { GiNotebook } from "react-icons/gi";
-import { addAssignment,editAssignment,deleteAssignmentAction,updateAssignmentAction, Assignment, setAssignments } from './reducer';
+import { deleteAssignmentAction,setAssignments } from './reducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteModule } from '../Modules/reducer';
-import { createAssignment, deleteAssignment, findAssignmentsForCourse } from './client';
+import { deleteAssignment, findAssignmentsForCourse } from './client';
 export default function Assignments() {
   const { cid } = useParams(); 
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
@@ -43,9 +41,6 @@ export default function Assignments() {
     }
     
   };
-
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
 
 
   const isFaculty = currentUser?.role === "FACULTY";
@@ -104,25 +99,7 @@ export default function Assignments() {
           <p>No assignments available for this course.</p>
         )}
       </ul>
-      {/* {showDeleteDialog && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Confirm Deletion</h5>
-                <button type="button" className="btn-close" onClick={cancelDelete}></button>
-              </div>
-              <div className="modal-body">
-                <p>Are you sure you want to delete this assignment?</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={cancelDelete}>No, Cancel</button>
-                <button type="button" className="btn btn-danger" onClick={confirmDelete}>Yes, Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
+  
     </div>
   );
 }

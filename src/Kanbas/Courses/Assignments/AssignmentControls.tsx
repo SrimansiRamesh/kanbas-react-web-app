@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 export default function AssignmentControls({ cid }:any) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    console.log(currentUser);
     const isFaculty = currentUser?.role === "FACULTY";
     return (
       <div id="wd-modules-controls" className="text-nowrap">

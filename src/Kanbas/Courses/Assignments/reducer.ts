@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Databases";
 
 export type Assignment = {
   _id: string;

@@ -23,6 +23,10 @@ export default function Modules() {
   const dispatch = useDispatch();
   const fetchModules = async () => {
     const modules = await coursesClient.findModulesForCourse(cid as string);
+    modules.map((module: any)=>{
+      console.log(module._id , module.name);
+
+    })
     dispatch(setModules(modules));
   };
   const createModuleForCourse = async () => {
@@ -31,6 +35,7 @@ export default function Modules() {
     const module = await coursesClient.createModuleForCourse(cid, newModule);
     console.log("module id created:",module._id);
     dispatch(addModule(module));
+    fetchModules();
   };
   const removeModule = async (moduleId: string) => {
     await modulesClient.deleteModule(moduleId);
