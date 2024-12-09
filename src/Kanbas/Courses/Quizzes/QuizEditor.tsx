@@ -1,20 +1,47 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as coursesClient from "../client";
 import { addQuiz, updateQuizAction } from "./reducer";
 import * as quizClient from "./client"
-
+import Question from "./Questions";
+import QuestionList from "./QuestionList";
+import { setQuestions } from "./QuestionsReducer";
+interface Question {
+  type: string; 
+  questionText: string;
+  points: number;
+  choices?: { text: string; isCorrect: boolean }[]; 
+  correctAnswer: string ;
+}
 export default function QuizEditor() {
   const { cid,qid } = useParams();
   const navigate = useNavigate();
   const [description, setDescription] = useState("");
-
+  const [questions, setQuestions] =useState<Question[]>([]);
+  const [totalPoints, setTotalPoints] = useState(0);
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
   };
+  const fetchQuizzes = async () => {
+    const questions = await quizClient.findQuestionsForQuiz(qid as string);
+    //dispatch(setQuestions(questions));
+  };
+  const handleAddQuestion = async(newQuestion:Question) => {
+    await quizClient.createQuestion(qid as string,newQuestion);
+    setQuestions([...questions, newQuestion]);
+    setTotalPoints(totalPoints + Number(newQuestion.points));
+  };
 
+  const handleUpdateQuestion = async(index:any, updatedQuestion:Question) => {
+    console.log('updated question in client-',updatedQuestion);
+    const newQuestion={...updatedQuestion,_id: new Date().getTime().toString() }
+    await quizClient.updateQuestion(qid,newQuestion);
+    const updatedQuestions = [...questions];
+    updatedQuestions[index] = updatedQuestion;
+    setQuestions(updatedQuestions);
+    setTotalPoints(updatedQuestions.reduce((sum, q) => sum + Number(q.points), 0));
+  };
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser?.role === "ADMIN";
   const { quizzes } = useSelector((state:any) => state.quizzesReducer);
@@ -67,21 +94,15 @@ const saveQuiz = async (course: any) => {
   };
   const handleSave = async () => {
     if (qid) {
-       
         const updatedquiz = { ...formData, _id: qid };
           await saveQuiz(updatedquiz);
     } else {
-       
         const newQuiz = { ...formData, _id: new Date().getTime().toString() };
         await createQuizzesForCourse(cid!, newQuiz);
         console.log(newQuiz)
     }
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
 };
-// const saveQuiz = async (module: any) => {
-//     await qui.updateAssignment(module);
-//     dispatch(updateAssignment(assignment));
-//   };
   const handleSaveAndPublish = async () => {
     try {
       const savedQuiz = await quizClient.createQuiz(cid!, {
@@ -89,7 +110,6 @@ const saveQuiz = async (course: any) => {
         published: true,
       });
       dispatch(addQuiz(savedQuiz));
-      
       navigate(`/Kanbas/courses/${cid}/quizzes`);
     } catch (err) {
       console.error("Failed to save and publish quiz:", err);
@@ -99,6 +119,7 @@ const saveQuiz = async (course: any) => {
   const handleCancel = () => {
     navigate(`/Kanbas/courses/${cid}/quizzes`);
   };
+
 
   return (
     <div className="container my-4">
@@ -358,6 +379,17 @@ const saveQuiz = async (course: any) => {
             Cancel
           </button>
         </form>
+      )}
+      {activeTab === "questions"&&(
+      <div>
+          <QuestionList
+          questions={questions}
+          onAddQuestion={handleAddQuestion}
+          onUpdateQuestion={handleUpdateQuestion}
+        />
+          <hr />
+      </div>
+      
       )}
     </div>
   );

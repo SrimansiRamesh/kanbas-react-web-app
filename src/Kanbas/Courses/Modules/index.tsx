@@ -25,7 +25,6 @@ export default function Modules() {
     const modules = await coursesClient.findModulesForCourse(cid as string);
     modules.map((module: any)=>{
       console.log(module._id , module.name);
-
     })
     dispatch(setModules(modules));
   };

@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function QuizzesControls({ cid }:any) {
-    // const { currentUser } = useSelector((state: any) => state.accountReducer);
-    // const isFaculty = currentUser?.role === "FACULTY";
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    //console.log(currentUser);
+    const isFaculty = currentUser?.role === "FACULTY";
     return (
       <div id="wd-modules-controls" className="text-nowrap">
         <div className="d-flex justify-content-between align-items-center my-3">
@@ -19,7 +20,7 @@ export default function QuizzesControls({ cid }:any) {
             placeholder="Search for Quizzes"
           />
         </div>
-        {/* {isFaculty && ( */}
+        {isFaculty && (
           <div className="ms-auto">
           <Link
             id="wd-add-quizzes-btn"
@@ -30,8 +31,8 @@ export default function QuizzesControls({ cid }:any) {
             Quiz
           </Link>
           </div>
-        {/* ) */}
-        {/* } */}
+         ) 
+         } 
         </div>
       </div>
     );

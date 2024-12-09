@@ -42,3 +42,31 @@ export const updateQuiz = async (quiz: any): Promise<any> => {
 export const deleteQuiz = async (quizId: string): Promise<void> => {
   await axios.delete(`${QUIZZES_API}/${quizId}`);
 };
+
+export const createQuestion = async (quizId: string, question: {
+  type:string;
+  questionText:string;
+  points: number;
+  choices?: { text: string; isCorrect: boolean }[];
+  correctAnswer:string;
+}): Promise<any> => {
+  try {
+    const response = await axios.post(`${QUIZZES_API}/${quizId}/question`, question);
+    return response.data;
+  } catch (error) {
+    console.error(`Error creating question for course ${quizId}:`, error);
+    throw error;
+  }
+};
+
+export const updateQuestion = async (quizId: any,question:any): Promise<any> => {
+  console.log(question);
+  console.log("in client-",question._id);
+  const response = await axios.put(`${QUIZZES_API}/${quizId}/question/${question._id}`, question);
+  return response.data;
+};
+
+export const findQuestionsForQuiz = async (quizId: string): Promise<any[]> => {
+  const response = await axios.get(`${QUIZZES_API}/${quizId}/questions`);
+  return response.data;
+};
