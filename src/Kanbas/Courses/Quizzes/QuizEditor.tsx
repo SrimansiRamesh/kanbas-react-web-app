@@ -1,46 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addQuiz, updateQuizAction } from "./reducer";
 import * as quizClient from "./client"
-import Question from "./Questions";
-import QuestionList from "./QuestionList";
-import { setQuestions } from "./QuestionsReducer";
-interface Question {
-  type: string; 
-  questionText: string;
-  points: number;
-  choices?: { text: string; isCorrect: boolean }[]; 
-  correctAnswer: string ;
-}
+import QuestionEditor from "./QuestionEditor";
 export default function QuizEditor() {
   const { cid,qid } = useParams();
   const navigate = useNavigate();
   const [description, setDescription] = useState("");
-  const [questions, setQuestions] =useState<Question[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
-  };
-  const fetchQuizzes = async () => {
-    const questions = await quizClient.findQuestionsForQuiz(qid as string);
-    //dispatch(setQuestions(questions));
-  };
-  const handleAddQuestion = async(newQuestion:Question) => {
-    await quizClient.createQuestion(qid as string,newQuestion);
-    setQuestions([...questions, newQuestion]);
-    setTotalPoints(totalPoints + Number(newQuestion.points));
-  };
-
-  const handleUpdateQuestion = async(index:any, updatedQuestion:Question) => {
-    console.log('updated question in client-',updatedQuestion);
-    const newQuestion={...updatedQuestion,_id: new Date().getTime().toString() }
-    await quizClient.updateQuestion(qid,newQuestion);
-    const updatedQuestions = [...questions];
-    updatedQuestions[index] = updatedQuestion;
-    setQuestions(updatedQuestions);
-    setTotalPoints(updatedQuestions.reduce((sum, q) => sum + Number(q.points), 0));
   };
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser?.role === "ADMIN";
@@ -66,22 +37,22 @@ export default function QuizEditor() {
     untilDate: "",
     course:cid
   };
+  
   const quiz = quizzes.find((a:any) => a.course === cid && a._id === qid) || defaultQuiz;
     const [formData, setFormData] = useState({ ...quiz });
-   
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
+
     });
   };
   const createQuizzesForCourse = async (cid: string, assignmentData: any) => {
     if (!cid) return;
     try {
-        const newQuiz = { ...formData, course: cid };
+        const newQuiz = { ...assignmentData, course: cid };
         const quiz = await quizClient.createQuiz(cid, newQuiz);
         dispatch(addQuiz(quiz)); // Dispatch the new assignment to the store
     } catch (error) {
@@ -275,7 +246,7 @@ const saveQuiz = async (course: any) => {
             >
               <option value="Never">Never</option>
               <option value="Immediately">Immediately</option>
-              <option value="AfterDueDate">After Due Date</option>
+              <option value="After Due Date">After Due Date</option>
             </select>
             </div>
           </div>
@@ -349,7 +320,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="dueDate" className="form-label">Due Date</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="dueDate" type="date" className="form-control" value={formData.dueDate} onChange={handleInputChange} />
+                    <input id="dueDate" name="dueDate" type="date" className="form-control" value={formData.dueDate} onChange={handleInputChange} />
                 </div>
             </div>
 
@@ -358,7 +329,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="availableDate" className="form-label">Available From</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="availableDate" type="date" className="form-control" value={formData.availableDate} onChange={handleInputChange} />
+                    <input id="availableDate" name="availableDate" type="date" className="form-control" value={formData.availableDate} onChange={handleInputChange} />
                 </div>
             </div>
             <div className="row mb-3 align-items-center">
@@ -366,7 +337,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="untilDate" className="form-label">Until Date</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="untilDate" type="date" className="form-control" value={formData.untilDate} onChange={handleInputChange} />
+                    <input id="untilDate" name="untilDate" type="date" className="form-control" value={formData.untilDate} onChange={handleInputChange} />
                 </div>
             </div>
           <button type="button" className="btn btn-primary me-2" onClick={handleSave}>
@@ -381,15 +352,7 @@ const saveQuiz = async (course: any) => {
         </form>
       )}
       {activeTab === "questions"&&(
-      <div>
-          <QuestionList
-          questions={questions}
-          onAddQuestion={handleAddQuestion}
-          onUpdateQuestion={handleUpdateQuestion}
-        />
-          <hr />
-      </div>
-      
+        <div><QuestionEditor/><hr /></div>
       )}
     </div>
   );

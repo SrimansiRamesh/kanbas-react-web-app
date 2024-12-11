@@ -78,7 +78,7 @@ export default function Kanbas() {
           return course;
         }
       });
-      setCourses(allCourses);
+      setCourses(enrolledCourses);
     } catch (error) {
       console.error(error);
     }
@@ -104,27 +104,6 @@ export default function Kanbas() {
     setAllCourses(allCourses.filter((course) => course._id !== courseId));
     await unenrollFromCourse(  currentUser._id ,courseId);
       setEnrolledCourses(enrolledCourses.filter((c:any) => c._id !== courseId));
-    // try {
-    //   const status = await courseClient.deleteCourse(courseId);
-  
-    //   if (status.success) {
-    //     setAllCourses((prevCourses) => {
-    //       const updatedCourses = prevCourses.filter((course) => course._id !== courseId);
-    //       console.log(updatedCourses)
-    //       return updatedCourses;
-    //     });
-    //     setCourses((prevCourses) => {
-    //       const updatedEnrolledCourses = prevCourses.filter((course) => course._id !== courseId);
-    //       console.log(updatedEnrolledCourses)
-    //       return updatedEnrolledCourses;
-    //     });
-    //     setEnrolledCourses((prevEnrolled) => prevEnrolled.filter((c) => c._id !== courseId));
-    //   } else {
-    //     console.error("Failed to delete course:", status.message);
-    //   }
-    // } catch (error) {
-    //   console.error("Error deleting course:", error);
-    // }
   };
 
   const updateCourse = async () => {

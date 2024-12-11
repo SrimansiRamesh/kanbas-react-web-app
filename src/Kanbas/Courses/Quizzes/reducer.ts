@@ -4,7 +4,6 @@ export type Quiz = {
     _id: string;
     title: string;
     description: string;
-    //course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     type: string;
     points: number;
     assignmentGroup: string;
@@ -34,7 +33,6 @@ const quizSlice = createSlice({
       state.quizzes = action.payload;
     },
     addQuiz: (state, action) => {
-      console.log('Action:',action.payload);
       state.quizzes.push(action.payload); 
     },
     deleteQuizAction: (state, action) => {

@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams,useNavigate } from 'react-router-dom';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import LessonControlButtons from '../Modules/LessonControlButtons';
 import { IoEllipsisVertical } from 'react-icons/io5';
@@ -9,12 +9,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import QuizzesControls from './QuizzesControls';
 import { addQuiz, deleteQuizAction , updateQuizAction , editQuiz ,setQuizzes,Quiz } from '../Quizzes/reducer';
 import { deleteQuiz, findQuizzesForCourse } from './client';
+import GreenCheckmark from "../Modules/GreenCheckmark";
+
 export default function Quizzes() {
-    const { cid } = useParams(); 
+    const { cid,qid } = useParams(); 
     const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
+    const [showDropdown, setShowDropdown] = useState(false);
+    const navigate = useNavigate();
 
+    // const toggleDropdown = () => {
+    //   setShowDropdown((prev) => !prev);
+    // };
+
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    const toggleDropdown = (quizId: string) => {
+      setActiveDropdown((prev) => (prev === quizId ? null : quizId));
+    };
   useEffect(() => {
     const fetchQuizzes = async () => {
       if (!cid) return;
@@ -42,12 +55,15 @@ export default function Quizzes() {
     
   };
 
+  const handleEdit=(quizId: any)=>{
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}`)
+  }
 
 
   const isFaculty = currentUser?.role === "FACULTY";
   return (
     <div className="w-100 p-5">
-        <QuizzesControls cid={cid} />
+      <QuizzesControls cid={cid} />
       <br />
       <ul className="list-group rounded-0">
         <li className="wd-assignment-group list-group-item p-0 fs-5 border-gray">
@@ -67,7 +83,7 @@ export default function Quizzes() {
               <GiNotebook className="me-4 text-success" style={{fontSize:'2rem'}}/>
               <div className="flex-grow-1">
                 <Link
-                  to={`${quiz._id}`}
+                  to={`QuizDetails/${quiz._id}`}
                   className="text-decoration-none text-dark"
                 >
                   <span className="fw-bold fs-5">{quiz.title}</span>
@@ -76,16 +92,44 @@ export default function Quizzes() {
                 <small className="text-muted">
                   <span className="text-danger">{quiz.title}</span> |{" "}
                   <b>Not available until</b> {quiz.availableDate} at 12:00 am | <br />
-                  <b>Due</b> {quiz.dueDate} at 11:59pm | {quiz.points} pts
+                  <b>Due</b> {quiz.dueDate} at 11:59pm | {quiz.points} pts 
                 </small>
               </div>
               {isFaculty&&(
-              <FaTrash 
-                className="text-danger me-2 mb-1" 
-                onClick={() =>  handleDelete(quiz._id)} 
-                style={{ cursor: 'pointer' }} 
-              />)}
-              <LessonControlButtons />
+              <div className="float-end position-relative">
+              <GreenCheckmark />
+              <IoEllipsisVertical
+                className="fs-4"
+                onClick={() => toggleDropdown(quiz._id)}
+                style={{ cursor: "pointer" }}
+              />
+              {activeDropdown === quiz._id && (
+              <ul
+                className="dropdown-menu show position-absolute"
+                style={{ right: 0 }}
+              >
+                <li
+                  className="dropdown-item"
+                  onClick={() => handleEdit(quiz._id)}
+                >
+                  Edit
+                </li>
+                <li
+                  className="dropdown-item"
+                  onClick={() => handleDelete(quiz._id)}
+                >
+                  Delete
+                </li>
+                <li
+                  className="dropdown-item"
+                  onClick={() => console.log('publish was clicked')}
+                >
+                  Publish
+                </li>
+              </ul>
+            )}
+            </div>
+              )}
             </li>
           ))
         ) : (

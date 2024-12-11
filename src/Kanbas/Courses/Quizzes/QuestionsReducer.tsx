@@ -1,26 +1,16 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import {  createSlice } from "@reduxjs/toolkit";
 
-export type Question = {
-  _id: string;
-  type: string; 
-  questionText: string;
-  points: number;
-  choices?: { text: string; isCorrect: boolean }[]; 
-  correctAnswer: string ;
-};
-
-const initialState = {
-  questions: [] as Question[],
+const initialState:{ questions:any } = {
+  questions: [],
 };
 const questionSlice = createSlice({
-  name: "quizzes",
+  name: "questions",
   initialState,
   reducers: {
-    setQuestions: (state, action: PayloadAction<Question[]>) => {
+    setQuestions: (state, action) => {
       state.questions = action.payload;
     },
     addQuestion: (state, action) => {
-      console.log('Action:',action.payload);
       state.questions.push(action.payload); 
     },
     deleteQuestionAction: (state, action) => {
@@ -33,7 +23,7 @@ const questionSlice = createSlice({
       ) as any;
     },
     editQuestion: (state, { payload: { id, data } }) => {
-      state.questions = state.questions.map((a) =>
+      state.questions = state.questions.map((a:any) =>
         a._id === id ? { ...a, ...data } : a
       );
     },
