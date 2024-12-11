@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 //import "bootstrap/dist/css/bootstrap.min.css";
 import * as questionsClient from "./client";
-import { useParams } from "react-router";
+import { useParams,useNavigate } from "react-router";
 import {addQuestion,deleteQuestionAction,setQuestions,updateQuestionAction} from "./QuestionsReducer";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,8 +15,9 @@ interface Question {
   }
 
 const QuizPreview: React.FC = () => {
-  const {qid}=useParams();
+  const {qid,cid}=useParams();
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [answers, setAnswers] = useState<
     { question: string; selectedAnswer: string;correct:boolean }[]
@@ -71,11 +72,8 @@ const QuizPreview: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      
-        
         const Attemptanswers=answers.map((answer)=>{
             const question = questions.find((q:any) => q._id === answer.question);
-            console.log('selected ans',answer.selectedAnswer,'correct ans',question.correctAnswer);
             return {
                 question: answer.question,
                 selectedAnswer: answer.selectedAnswer,
@@ -86,51 +84,41 @@ const QuizPreview: React.FC = () => {
         const score = calculateScore(Attemptanswers);
       const attempt = {
         attemptNumber: 1, 
-        // answers: answers.map((answer) => {
-        //   const question = questions.find((q:any) => q._id === answer.question);
-        //   console.log('selected ans',answer.selectedAnswer,'correct ans',question.correctAnswer);
-        //   return {
-        //     question: answer.question,
-        //     selectedAnswer: answer.selectedAnswer,
-        //     correct: question ? question.correctAnswer === answer.selectedAnswer : false
-        //   };
-        // }),
         answers:Attemptanswers,
         score: score,
         completedAt: new Date(),
       };
-      
-      
       const response = await questionsClient.createAttempt(qid!, currentUser._id, attempt);
       setAnswers(attempt.answers);
-      console.log('answers after submitting',attempt.answers);
       setSubmitted(true);
       console.log("Quiz attempt saved successfully!");
+      console.log(questions);
+      navigate(`/Kanbas/Courses/${cid}/quiz/${qid}/results`, {
+        state: {
+          answers: Attemptanswers,
+          score: score,
+          questions: questions,
+        },
+      });
     } catch (err: any) {
       setError(err.message);
       console.error("Error submitting quiz attempt:", err);
     }
+    
   };
   
 
   const calculateScore = (
     answers: { question: string; selectedAnswer: string; correct: boolean }[]
   ): number => {
-    console.log('calculating score...');
     let score = 0;  
-    console.log('answers',answers);
   
     for (const answer of answers) {
       const question = questions.find((q: any) => q._id === answer.question);
-        console.log('question',question);
-        console.log('correct?',answer.correct);
       if (question && answer.correct) {
-        console.log('adding scores');
-        console.log(question.points); 
         score += question.points;
       }
     }
-    
     return score;
   };
   
@@ -169,9 +157,6 @@ const QuizPreview: React.FC = () => {
                     name={`question-${question._id}`}
                     id={`${question._id}-idx`}
                     value={choice.text}
-                    // onChange={() =>
-                    //   handleAnswerChange(question.id, choice)
-                    // }
                     checked={
                         answers.find(
                           (answer) => answer.question === question._id
