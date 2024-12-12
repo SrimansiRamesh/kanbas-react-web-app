@@ -84,18 +84,6 @@ const saveQuiz = async (course: any) => {
     }
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
 };
-  const handleSaveAndPublish = async () => {
-    try {
-      const savedQuiz = await quizClient.createQuiz(cid!, {
-        ...formData,
-        published: true,
-      });  
-      dispatch(addQuiz(savedQuiz));
-      navigate(`/Kanbas/courses/${cid}/quizzes`);
-    } catch (err) {
-      console.error("Failed to save and publish quiz:", err);
-    }
-  };
 
   const handleCancel = () => {
     navigate(`/Kanbas/courses/${cid}/quizzes`);
@@ -366,9 +354,6 @@ const saveQuiz = async (course: any) => {
             </div>
           <button type="button" className="btn btn-primary me-2" onClick={handleSave}>
             Save
-          </button>
-          <button type="button" className="btn btn-success me-2" onClick={handleSaveAndPublish}>
-            Save and Publish
           </button>
           <button type="button" className="btn btn-secondary" onClick={handleCancel}>
             Cancel
