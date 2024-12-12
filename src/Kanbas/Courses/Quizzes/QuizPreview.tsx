@@ -52,24 +52,7 @@ const QuizPreview: React.FC = () => {
   }, [qid]);
 
 
-  const handleAnswerChange = (question: string, selectedAnswer: string) => {
-    setAnswers((prevAnswers) => {
-        const updatedAnswers = prevAnswers.map((answer) =>
-            answer.question === question ? { ...answer, selectedAnswer } : answer
-          );
-          const Question = questions.find((q:any) => q.id === question);
-
-          if (!updatedAnswers.find((answer) => answer.question === Question)) {
-            updatedAnswers.push({ question,
-                 selectedAnswer, 
-                 correct: Question ? Question.correctAnswer === selectedAnswer : false, 
-                });
-          }
-          return updatedAnswers;
-    });
-  };
-
-  // const handleAnswerChangeFB= (question: string, selectedAnswer: string) => {
+  // const handleAnswerChange = (question: string, selectedAnswer: string) => {
   //   setAnswers((prevAnswers) => {
   //       const updatedAnswers = prevAnswers.map((answer) =>
   //           answer.question === question ? { ...answer, selectedAnswer } : answer
@@ -85,6 +68,40 @@ const QuizPreview: React.FC = () => {
   //         return updatedAnswers;
   //   });
   // };
+
+  const handleAnswerChange = (questionId: string, selectedAnswer: string) => {
+    setAnswers((prevAnswers) => {
+      // Check if an answer already exists for this question
+      const existingAnswerIndex = prevAnswers.findIndex(
+        (answer) => answer.question === questionId
+      );
+  
+      // Find the question to verify the correct answer
+      const question = questions.find((q: any) => q.id === questionId);
+  
+      if (existingAnswerIndex !== -1) {
+        // Update the existing answer
+        const updatedAnswers = [...prevAnswers];
+        updatedAnswers[existingAnswerIndex] = {
+          ...updatedAnswers[existingAnswerIndex],
+          selectedAnswer,
+          correct: question ? question.correctAnswer === selectedAnswer : false,
+        };
+        return updatedAnswers;
+      } else {
+        // Add a new answer
+        return [
+          ...prevAnswers,
+          {
+            question: questionId,
+            selectedAnswer,
+            correct: question ? question.correctAnswer === selectedAnswer : false,
+          },
+        ];
+      }
+    });
+  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
