@@ -248,7 +248,7 @@ const QuizPreview: React.FC = () => {
                     className="form-check-input"
                     name={`question-${question._id}`}
                     id={`${question._id}-${idx}`}
-                    value={choice}
+                    //value={choice}
                     onChange={(e) =>
                       handleAnswerChange(question._id,choice)
                     }
