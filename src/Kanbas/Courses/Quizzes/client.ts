@@ -38,6 +38,7 @@ export const createQuiz = async (courseId: string, quiz: {
 };
 
 export const updateQuiz = async (quiz: any): Promise<any> => {
+  console.log(quiz._id);
   const response = await axios.put(`${QUIZZES_API}/${quiz._id}`, quiz);
   return response.data;
 };
@@ -72,7 +73,7 @@ export const updateQuestion = async (question: any) => {
     throw error;
   }
 };
-export const findQuestionsForQuiz = async (quizId: string): Promise<any[]> => {
+export const findQuestionsForQuiz = async (quizId:any): Promise<any[]> => {
   const response = await axios.get(`${QUIZZES_API}/${quizId}/questions`);
   return response.data;
 };
@@ -91,11 +92,34 @@ export const createAttempt = async (quizId: string, userID: string, attempt: {
     console.log(attempt);
     const response = await axios.post(`${QUIZZES_API}/${quizId}/attempt`, {
       ...attempt,
-      student: userID,  // Include the student (user) ID in the request body
+      student: userID,
     });
     return response.data;
   } catch (error) {
     console.error(`Error creating attempt for quiz ${quizId}:`, error);
+    throw error;
+  }
+};
+
+export const getLastAttempt = async (quizId: string, userId: string) => {
+  try {
+    const { data } = await axiosWithCredentials.get(
+      `${QUIZZES_API}/${quizId}/user/${userId}/attempts/last`
+    );
+    console.log('data recieved',data);
+    return data; // Return the last attempt data
+  } catch (error: any) {
+    console.error("Error fetching last attempt:", error);
+    throw error;
+  }
+};
+
+export const getQuestionById = async (questionId: string, quizId: string) => {
+  try {
+    const { data } = await axiosWithCredentials.get(`${QUIZZES_API}/${quizId}/question/${questionId}`);
+    return data; 
+  } catch (error: any) {
+    console.error("Error fetching last attempt:", error);
     throw error;
   }
 };

@@ -69,6 +69,23 @@ const QuizPreview: React.FC = () => {
     });
   };
 
+  // const handleAnswerChangeFB= (question: string, selectedAnswer: string) => {
+  //   setAnswers((prevAnswers) => {
+  //       const updatedAnswers = prevAnswers.map((answer) =>
+  //           answer.question === question ? { ...answer, selectedAnswer } : answer
+  //         );
+  //         const Question = questions.find((q:any) => q.id === question);
+
+  //         if (!updatedAnswers.find((answer) => answer.question === Question)) {
+  //           updatedAnswers.push({ question,
+  //                selectedAnswer, 
+  //                correct: Question ? Question.correctAnswer === selectedAnswer : false, 
+  //               });
+  //         }
+  //         return updatedAnswers;
+  //   });
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -91,9 +108,7 @@ const QuizPreview: React.FC = () => {
       const response = await questionsClient.createAttempt(qid!, currentUser._id, attempt);
       setAnswers(attempt.answers);
       setSubmitted(true);
-      console.log("Quiz attempt saved successfully!");
-      console.log(questions);
-      navigate(`/Kanbas/Courses/${cid}/quiz/${qid}/results`, {
+      navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/results`, {
         state: {
           answers: Attemptanswers,
           score: score,
@@ -107,6 +122,9 @@ const QuizPreview: React.FC = () => {
     
   };
   
+  const handleResults=()=>{
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/results`)
+  }
 
   const calculateScore = (
     answers: { question: string; selectedAnswer: string; correct: boolean }[]
@@ -127,7 +145,12 @@ const QuizPreview: React.FC = () => {
   }
 
   if (error) {
-    return <div className="text-center text-danger mt-5">{error}</div>;
+    return (<div className="text-center text-danger mt-5">
+      <p>You have exceeded the number of attempts for this quiz</p>
+      <button type="submit" className="btn btn-primary" onClick={handleResults}>
+          Previous Attempt
+      </button>
+    </div>);
   }
 
   if (submitted) {
@@ -146,22 +169,29 @@ const QuizPreview: React.FC = () => {
         {questions.map((question:any, index:any) => (
           <div className="card mb-3" key={question.id}>
             <div className="card-body">
-              <h5 className="card-title">
+              <h5 className="card-title bg-dark bg-opacity-25 p-4 rounded text-capitalize d-flex justify-content-between align-items-center">
                 Question {index + 1}: {question.questionText}
+                <p className="card-text bg-success bg-opacity-75 p-2 rounded text-capitalize d-inline-flex fs-6 mb-0 ">
+                Points: {question.points}
+              </p>
               </h5>
-              {question.choices.map((choice:any,idx:number) => (
-                <div className="form-check" key={choice}>
+              
+              <div className="px-5 mt-4 d-flex flex-wrap gap-3 justify-content-around align-items-center">
+              {question.type==='Multiple Choice' && question.choices.map((choice:any,idx:number) => (
+                  <div className="form-check px-5 py-2 rounded mb-2 mx-4 text-center bg-primary bg-opacity-25" key={choice} style={{
+                        width: "30%",
+                      }}>
                   <input
                     type="radio"
                     className="form-check-input"
                     name={`question-${question._id}`}
-                    id={`${question._id}-idx`}
+                    id={`${question._id}-${idx}`}
                     value={choice.text}
                     checked={
                         answers.find(
                           (answer) => answer.question === question._id
                         )?.selectedAnswer === choice.text
-                      } // Set checked based on current state
+                      } 
                       onChange={() =>
                         handleAnswerChange(question._id, choice.text)
                       }
@@ -173,13 +203,74 @@ const QuizPreview: React.FC = () => {
                     {choice.text}
                   </label>
                 </div>
+                
               ))}
+              </div>
+
+              <div className="px-5 d-flex flex-wrap gap-3 justify-content-around align-items-center">
+              {question.type==='Fill in the Blank' && question.choices.map((choice:any,idx:number) => (
+                <div className="form-check px-5 py-2 rounded mb-2 mx-4 text-center" key={choice} style={{
+                  width: "70%",
+                }}>
+                  <input
+                      type="text"
+                      style={{
+                        width:"60%",
+                        border: "none",
+                        borderBottom: "1px solid #ccc", // Default bottom border
+                        outline: "none", // Remove default focus outline
+                        transition: "border-color 0.3s", // Smooth transition for focus effect
+                      }}
+                      className="text-center"
+                      placeholder="Enter your answer"
+                      onFocus={(e) => (e.target.style.borderBottom = "2px solid #007bff")} // Highlight on focus
+                      onBlur={(e) => (e.target.style.borderBottom = "1px solid #ccc")} // Reset on blur
+                      name={`question-${question._id}`}
+                      id={`${question._id}-${idx}`}
+                      onChange={(e) => handleAnswerChange(question._id, e.target.value)}
+                    />
+
+                  <label
+                    htmlFor={`${question.id}-${choice}`}
+                    className="form-check-label"
+                  >
+                    {choice.text}
+                  </label>
+                </div>
+              ))}
+              </div>
+
+              <div className="px-5 d-flex flex-wrap gap-3 justify-content-around align-items-center">
+                {question.type==='True/False' && ["True","False"].map((choice:string,idx:number) => (
+                <div className="form-check px-5 py-2 rounded mb-2 mx-4 text-center bg-primary bg-opacity-25" key={choice}>
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    name={`question-${question._id}`}
+                    id={`${question._id}-${idx}`}
+                    value={choice}
+                    onChange={(e) =>
+                      handleAnswerChange(question._id,choice)
+                    }
+                  />
+                  <label
+                    htmlFor={`${question.id}-${choice}`}
+                    className="form-check-label"
+                  >
+                    {choice}
+                  </label>
+                </div>
+              ))}
+              </div>
+              
             </div>
           </div>
         ))}
-        <button type="submit" className="btn btn-primary">
-          Submit Quiz
-        </button>
+        <div className="d-flex justify-content-center align-items-center w-100">
+          <button type="submit" className="btn btn-primary  w-40 ">
+            Submit Quiz
+          </button>
+        </div>
       </form>
     </div>
   );

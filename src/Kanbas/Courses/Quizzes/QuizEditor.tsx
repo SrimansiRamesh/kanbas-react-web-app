@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addQuiz, updateQuizAction } from "./reducer";
 import * as quizClient from "./client"
 import QuestionEditor from "./QuestionEditor";
+import { formatDate } from ".";
 export default function QuizEditor() {
   const { cid,qid } = useParams();
   const navigate = useNavigate();
@@ -59,8 +60,17 @@ export default function QuizEditor() {
         console.error("Error creating quiz:", error);
     }
 };
+const formatDateForInput = (isoString:any) => {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const saveQuiz = async (course: any) => {
-    await quizClient.updateQuiz(course);
+    console.log(course);
+    await quizClient.updateQuiz(course); 
     dispatch(updateQuizAction(quiz));
   };
   const handleSave = async () => {
@@ -79,7 +89,7 @@ const saveQuiz = async (course: any) => {
       const savedQuiz = await quizClient.createQuiz(cid!, {
         ...formData,
         published: true,
-      });
+      });  
       dispatch(addQuiz(savedQuiz));
       navigate(`/Kanbas/courses/${cid}/quizzes`);
     } catch (err) {
@@ -231,6 +241,20 @@ const saveQuiz = async (course: any) => {
             </div>
           </div>
 
+          <div className="row mb-3 align-items-center">
+          <div className="col-md-5 text-end">
+            <label className="form-label">Maximum Attempts</label>
+            </div>
+            <div className="col-md-7">
+            <input
+              type="number"
+              name="maxAttempts"
+              value={formData.maxAttempts}
+              onChange={handleInputChange}
+            />
+            </div>
+          </div>
+
           {/* Show Correct Answers */}
           <div className="row mb-3 align-items-center">
           <div className="col-md-5 text-end">
@@ -320,7 +344,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="dueDate" className="form-label">Due Date</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="dueDate" name="dueDate" type="date" className="form-control" value={formData.dueDate} onChange={handleInputChange} />
+                    <input id="dueDate" name="dueDate" type="date" className="form-control" value={formatDateForInput(formData.dueDate)} onChange={handleInputChange} />
                 </div>
             </div>
 
@@ -329,7 +353,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="availableDate" className="form-label">Available From</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="availableDate" name="availableDate" type="date" className="form-control" value={formData.availableDate} onChange={handleInputChange} />
+                    <input id="availableDate" name="availableDate" type="date" className="form-control" value={formatDateForInput(formData.availableDate)} onChange={handleInputChange} />
                 </div>
             </div>
             <div className="row mb-3 align-items-center">
@@ -337,7 +361,7 @@ const saveQuiz = async (course: any) => {
                     <label htmlFor="untilDate" className="form-label">Until Date</label>
                 </div>
                 <div className="col-md-7">
-                    <input id="untilDate" name="untilDate" type="date" className="form-control" value={formData.untilDate} onChange={handleInputChange} />
+                    <input id="untilDate" name="untilDate" type="date" className="form-control" value={formatDateForInput(formData.untilDate)} onChange={handleInputChange} />
                 </div>
             </div>
           <button type="button" className="btn btn-primary me-2" onClick={handleSave}>

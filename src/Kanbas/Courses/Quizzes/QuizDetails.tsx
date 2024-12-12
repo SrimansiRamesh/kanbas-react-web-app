@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router";
-
+import { formatDate } from ".";
 const QuizDetails: React.FC = () => {
  const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
  const {qid,cid}=useParams();
@@ -83,10 +83,10 @@ const QuizDetails: React.FC = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{quiz.dueDate}</td>
+                <td>{formatDate(quiz.dueDate)}</td>
                 <td>Everyone</td>
-                <td>{quiz.availableDate}</td>
-                <td>{quiz.untilDate}</td>
+                <td>{formatDate(quiz.availableDate)}</td>
+                <td>{formatDate(quiz.untilDate)}</td>
               </tr>
             </tbody>
           </table>

@@ -118,7 +118,7 @@ interface ModalProps {
                     <label className="form-label">Answer</label>
                     <select
                       className="form-select"
-                      value={newQuestion.correctAnswer}
+                      // value={newQuestion.correctAnswer}
                       onChange={(e) =>
                         handleNewQuestionChange("correctAnswer", e.target.value)
                       }
@@ -137,7 +137,7 @@ interface ModalProps {
                       type="text"
                       className="form-control"
                       placeholder="Correct answer"
-                      value={newQuestion.correctAnswer || ""}
+                      // value={newQuestion.correctAnswer || ""}
                       onChange={(e) =>
                         handleNewQuestionChange("correctAnswer", e.target.value)
                       }

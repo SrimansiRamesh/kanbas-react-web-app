@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams,useNavigate } from "react-router";
 import * as quizClient from "./client";
 
 import {addQuestion,deleteQuestionAction,setQuestions,updateQuestionAction} from "./QuestionsReducer";
@@ -14,7 +14,7 @@ const QuizQuestions: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
+  const navigate=useNavigate();
   const defaultQuestion = {
     quiz: qid,
     type: "Multiple Choice",
@@ -29,6 +29,7 @@ const QuizQuestions: React.FC = () => {
     questions.find(
       (a: any) => a.quiz === qid && a._id === questionId
     ) || defaultQuestion;
+  //console.log('question',question);
   const [newQuestion, setNewQuestion] = useState({ ...question });
   
 
@@ -37,12 +38,28 @@ const QuizQuestions: React.FC = () => {
   const isFaculty = currentUser?.role === "FACULTY";
 
   const fetchQuestions = async () => {
-    const fetchedQuestions = await quizClient.findQuestionsForQuiz(
-      qid as string
-    );
-    dispatch(setQuestions(fetchedQuestions));
-  };
-
+    if(!qid){
+      if (!alertShown.current) {
+        window.alert("Kindly create a quiz first before adding questions");
+        alertShown.current = true; // Set the flag to true
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/new`);
+      }
+      return; // Exit to avoid executing the else block
+    }
+    
+    try{
+      const fetchedQuestions = await quizClient.findQuestionsForQuiz(
+        qid
+      );
+      dispatch(setQuestions(fetchedQuestions));
+    }catch(error){
+      console.log(error);
+    }
+      
+    }
+    
+  
+  const alertShown = useRef(false); 
   useEffect(() => {
     fetchQuestions();
   }, []);

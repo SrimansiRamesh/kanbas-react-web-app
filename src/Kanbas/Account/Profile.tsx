@@ -31,7 +31,7 @@ export default function Profile() {
     };
   useEffect(() => { fetchProfile(); }, []);
   return (
-    <div id="wd-profile-screen">
+    <div id="wd-profile-screen" className="vh-100 flex-column w-50">
         <h3 className="mb-3 mt-1">Profile</h3>
         {profile && (
         <div>
@@ -39,23 +39,27 @@ export default function Profile() {
                  onChange={(e) => setProfile({ ...profile, username:  e.target.value })}/>
           <input defaultValue={profile.password} id="wd-password" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, password:  e.target.value })}/>
-          <input defaultValue={profile.firstName} id="wd-firstname" className="form-control mb-2"
+          <input defaultValue={profile.firstName} placeholder="First Name" id="wd-firstname" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}/>
-          <input defaultValue={profile.lastName} id="wd-lastname" className="form-control mb-2"
+          <input defaultValue={profile.lastName}  placeholder="Last Name" id="wd-lastname" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, lastName:  e.target.value })}/>
-          <input defaultValue={profile.dob} id="wd-dob" className="form-control mb-2"
+          <input defaultValue={profile.dob} id="wd-dob" placeholder="Date of Birth" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
-          <input defaultValue={profile.email} id="wd-email" className="form-control mb-2"
+          <input defaultValue={profile.email} id="wd-email" placeholder="Email" className="form-control mb-2"
                  onChange={ (e) => setProfile({ ...profile, email: e.target.value })}/>
           <select value={profile.role} onChange={(e) => setProfile({ ...profile, role:  e.target.value })}
                  className="form-control mb-2" id="wd-role">
             <option value="USER">User</option>            <option value="ADMIN">Admin</option>
             <option value="FACULTY">Faculty</option>      <option value="STUDENT">Student</option>
           </select>
-          <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
-          <button onClick={signout} className="btn btn-danger w-100 mb-2" id="wd-signout-btn">
+          <div className="d-flex gap-3 ">
+          <button onClick={updateProfile} className="btn btn-primary"> Update </button>
+          <button onClick={signout} className="btn btn-danger " id="wd-signout-btn">
             Sign out
           </button>
+          </div>
+          
+          
         </div>
       )}
 </div>);}

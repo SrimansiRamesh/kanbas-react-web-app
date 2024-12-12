@@ -12,10 +12,10 @@ export default function Account() {
     <div id="wd-account-screen">
       <table>
         <tr>
-          <td valign="top">
+          <td valign="top" >
             <AccountNavigation />
           </td>
-          <td valign="top">
+          <td valign="top" className="w-100">
             <Routes>
               <Route path="/"
                      element={<Navigate to={ currentUser ? "/Kanbas/Account/Profile" : "/Kanbas/Account/Signin" } />} />

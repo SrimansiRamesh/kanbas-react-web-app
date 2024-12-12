@@ -8,23 +8,22 @@ import { GiNotebook } from "react-icons/gi";
 import { useDispatch, useSelector } from 'react-redux';
 import QuizzesControls from './QuizzesControls';
 import { addQuiz, deleteQuizAction , updateQuizAction , editQuiz ,setQuizzes,Quiz } from '../Quizzes/reducer';
-import { deleteQuiz, findQuizzesForCourse } from './client';
+import { deleteQuiz, findQuizzesForCourse,updateQuiz } from './client';
 import GreenCheckmark from "../Modules/GreenCheckmark";
-
+export  function formatDate(isoString:any){
+  const date = new Date(isoString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 export default function Quizzes() {
     const { cid,qid } = useParams(); 
     const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
-    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
-
-    // const toggleDropdown = () => {
-    //   setShowDropdown((prev) => !prev);
-    // };
-
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
     const toggleDropdown = (quizId: string) => {
       setActiveDropdown((prev) => (prev === quizId ? null : quizId));
     };
@@ -59,8 +58,18 @@ export default function Quizzes() {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}`)
   }
 
+  const handlePublish=(quizId:any)=>{
+    const quizToUpdate=quizzes.find((q:any)=>q._id===quizId);
+    const updatedQuiz={...quizToUpdate,published:!quizToUpdate.published};
+    updateQuiz(updatedQuiz);
+    dispatch(updateQuizAction(updatedQuiz));
+  }
+  
+ 
 
   const isFaculty = currentUser?.role === "FACULTY";
+  const isStudent = currentUser?.role === "STUDENT";
+
   return (
     <div className="w-100 p-5">
       <QuizzesControls cid={cid} />
@@ -75,7 +84,9 @@ export default function Quizzes() {
           </div>
         </li>
         {quizzes.length > 0 ? (
-          quizzes.map((quiz:any) => (
+          quizzes
+          .filter((quiz: any) => isFaculty || (isStudent && quiz.published) )
+          .map((quiz: any) => (
             <li
               key={quiz._id}
               className="list-group-item p-3 d-flex align-items-center"
@@ -91,9 +102,10 @@ export default function Quizzes() {
                 <br />
                 <small className="text-muted">
                   <span className="text-danger">{quiz.title}</span> |{" "}
-                  <b>Not available until</b> {quiz.availableDate} at 12:00 am | <br />
-                  <b>Due</b> {quiz.dueDate} at 11:59pm | {quiz.points} pts 
+                  <b>Not available until</b> {formatDate(quiz.availableDate)} at 12:00 am | <br />
+                  <b>Due</b> {formatDate(quiz.dueDate)} at 11:59pm | {quiz.points} pts
                 </small>
+
               </div>
               {isFaculty&&(
               <div className="float-end position-relative">
@@ -109,22 +121,25 @@ export default function Quizzes() {
                 style={{ right: 0 }}
               >
                 <li
-                  className="dropdown-item"
+                  className="dropdown-item "
                   onClick={() => handleEdit(quiz._id)}
+                  style={{cursor:"pointer"}}
                 >
                   Edit
                 </li>
                 <li
                   className="dropdown-item"
                   onClick={() => handleDelete(quiz._id)}
+                  style={{cursor:"pointer"}}
                 >
                   Delete
                 </li>
                 <li
                   className="dropdown-item"
-                  onClick={() => console.log('publish was clicked')}
+                  onClick={() => handlePublish(quiz._id)}
+                  style={{cursor:"pointer"}}
                 >
-                  Publish
+                  {quiz.published?"Unpublish":"Publish"}
                 </li>
               </ul>
             )}
